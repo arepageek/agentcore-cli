@@ -25,6 +25,8 @@ import type {
 import {
   DEFAULT_MEMORY_EXPIRY_DAYS,
   DEFAULT_NETWORK_MODE,
+  DEFAULT_NODE_ENTRYPOINT,
+  DEFAULT_NODE_VERSION,
   DEFAULT_PYTHON_ENTRYPOINT,
   DEFAULT_PYTHON_VERSION,
 } from '../../../tui/screens/generate/defaults';
@@ -111,13 +113,17 @@ export function mapGenerateConfigToAgent(config: GenerateConfig): AgentEnvSpec {
   const codeLocation = `${APP_DIR}/${config.projectName}/`;
   const protocol = config.protocol ?? 'HTTP';
   const networkMode = config.networkMode ?? DEFAULT_NETWORK_MODE;
+  const isTypeScript = config.language === 'TypeScript';
+  const entrypoint = isTypeScript ? DEFAULT_NODE_ENTRYPOINT : DEFAULT_PYTHON_ENTRYPOINT;
+  const runtimeVersion = isTypeScript ? DEFAULT_NODE_VERSION : DEFAULT_PYTHON_VERSION;
+  const defaultBuildType = isTypeScript ? 'Container' : 'CodeZip';
 
   return {
     name: config.projectName,
-    build: config.buildType ?? 'CodeZip',
-    entrypoint: DEFAULT_PYTHON_ENTRYPOINT as FilePath,
+    build: config.buildType ?? defaultBuildType,
+    entrypoint: entrypoint as FilePath,
     codeLocation: codeLocation as DirectoryPath,
-    runtimeVersion: DEFAULT_PYTHON_VERSION,
+    runtimeVersion,
     networkMode,
     protocol,
     ...(networkMode === 'VPC' &&

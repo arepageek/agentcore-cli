@@ -139,4 +139,25 @@ describe('CodeZipDevServer spawn config', () => {
       expect.objectContaining({ cwd: '/project/app' })
     );
   });
+
+  it('TypeScript HTTP: uses npx tsx watch with entrypoint file directly', async () => {
+    const config: DevConfig = {
+      agentName: 'TsAgent',
+      module: 'main.ts',
+      directory: '/project/app',
+      hasConfig: true,
+      isPython: false,
+      buildType: 'CodeZip',
+      protocol: 'HTTP',
+    };
+
+    const server = new CodeZipDevServer(config, defaultOptions);
+    await server.start();
+
+    expect(mockSpawn).toHaveBeenCalledWith(
+      'npx',
+      ['tsx', 'watch', 'main.ts'],
+      expect.objectContaining({ cwd: '/project/app' })
+    );
+  });
 });

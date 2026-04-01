@@ -98,7 +98,7 @@ describe('add agent command', () => {
       expect(json.error.includes('Invalid framework'), `Error: ${json.error}`).toBeTruthy();
     });
 
-    it('rejects TypeScript for create path', async () => {
+    it('accepts TypeScript for create path', async () => {
       const result = await runCLI(
         [
           'add',
@@ -118,10 +118,9 @@ describe('add agent command', () => {
         projectDir
       );
 
-      expect(result.exitCode).toBe(1);
+      expect(result.exitCode).toBe(0);
       const json = JSON.parse(result.stdout);
-      expect(json.success).toBe(false);
-      expect(json.error.includes('Python'), `Error should mention Python: ${json.error}`).toBeTruthy();
+      expect(json.success).toBe(true);
     });
 
     it('validates framework/model compatibility', async () => {

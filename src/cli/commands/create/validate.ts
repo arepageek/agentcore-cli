@@ -176,8 +176,16 @@ export function validateCreateOptions(options: CreateOptions, cwd?: string): Val
     }
 
     // Validate language is supported
-    if (options.language === 'TypeScript') {
-      return { valid: false, error: 'TypeScript is not yet supported. Currently supported: Python' };
+    if (options.language === 'Other') {
+      return { valid: false, error: 'Other is not supported. Currently supported: Python, TypeScript' };
+    }
+
+    // TypeScript requires Container build (AgentCore Runtime CodeZip only supports Python)
+    if (options.language === 'TypeScript' && options.build === 'CodeZip') {
+      return {
+        valid: false,
+        error: 'TypeScript requires Container build type. AgentCore Runtime direct code deploy only supports Python.',
+      };
     }
 
     // Validate framework/model compatibility

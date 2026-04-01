@@ -42,6 +42,16 @@ The dev server automatically:
 2. Runs `uv sync` to install dependencies from `pyproject.toml`
 3. Starts uvicorn with your agent
 
+### TypeScript / Node.js
+
+The dev server automatically:
+
+1. Runs `npm install` if `node_modules` is missing
+2. Starts `tsx watch` with your agent entry point (hot-reload enabled)
+
+> TypeScript agents use Container build for deployment, but `agentcore dev` runs them locally without Docker for fast
+> iteration.
+
 ### API Keys
 
 For non-Bedrock providers, add keys to `agentcore/.env.local`:
@@ -93,10 +103,13 @@ immediately.
 
 ### Container Agents
 
-For container agents, the dev server builds a Docker image and runs it with your source directory mounted as a volume.
-Changes to your code are picked up by uvicorn's `--reload` inside the container — no image rebuild needed.
+For Python container agents, the dev server builds a Docker image and runs it with your source directory mounted as a
+volume. Changes to your code are picked up by uvicorn's `--reload` inside the container — no image rebuild needed.
 
-See [Container Builds](container-builds.md) for full details on container development.
+TypeScript agents always run locally in dev mode (via `tsx watch`), even though they use Container build for deployment.
+No Docker is needed for `agentcore dev` with TypeScript.
+
+See [Container Builds](container-builds.md) for full details on container development and deployment.
 
 ## Dev vs Deployed Behavior
 

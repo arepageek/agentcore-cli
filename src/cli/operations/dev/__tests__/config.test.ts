@@ -27,7 +27,7 @@ describe('getDevConfig', () => {
     expect(config).toBeNull();
   });
 
-  it('returns null when project has no dev-supported agents', () => {
+  it('returns config when project has a Node.js agent', () => {
     const project: AgentCoreProjectSpec = {
       name: 'TestProject',
       version: 1,
@@ -37,7 +37,7 @@ describe('getDevConfig', () => {
           name: 'NodeAgent',
           build: 'CodeZip',
           runtimeVersion: 'NODE_20',
-          entrypoint: filePath('index.js'), // Not a Python agent
+          entrypoint: filePath('index.js'),
           codeLocation: dirPath('./agents/node'),
           protocol: 'HTTP',
         },
@@ -51,7 +51,9 @@ describe('getDevConfig', () => {
     };
 
     const config = getDevConfig(workingDir, project);
-    expect(config).toBeNull();
+    expect(config).not.toBeNull();
+    expect(config!.isPython).toBe(false);
+    expect(config!.agentName).toBe('NodeAgent');
   });
 
   it('returns config when project has a Python agent', () => {
@@ -138,7 +140,7 @@ describe('getDevConfig', () => {
       policyEngines: [],
     };
 
-    expect(() => getDevConfig(workingDir, project, undefined, 'NodeAgent')).toThrow('Dev mode only supports Python');
+    expect(() => getDevConfig(workingDir, project, undefined, 'NodeAgent')).not.toThrow();
   });
 
   it('resolves directory from codeLocation relative to configRoot', () => {
@@ -449,7 +451,7 @@ describe('getDevSupportedAgents', () => {
     expect(getDevSupportedAgents(project)).toEqual([]);
   });
 
-  it('returns empty array when no agents are Python', () => {
+  it('returns Node.js agents as dev-supported', () => {
     const project: AgentCoreProjectSpec = {
       name: 'TestProject',
       version: 1,
@@ -472,10 +474,12 @@ describe('getDevSupportedAgents', () => {
       policyEngines: [],
     };
 
-    expect(getDevSupportedAgents(project)).toEqual([]);
+    const supported = getDevSupportedAgents(project);
+    expect(supported).toHaveLength(1);
+    expect(supported[0]?.name).toBe('NodeAgent');
   });
 
-  it('returns only Python agents with entrypoints', () => {
+  it('returns both Python and Node agents with entrypoints', () => {
     const project: AgentCoreProjectSpec = {
       name: 'TestProject',
       version: 1,
@@ -507,8 +511,9 @@ describe('getDevSupportedAgents', () => {
     };
 
     const supported = getDevSupportedAgents(project);
-    expect(supported).toHaveLength(1);
+    expect(supported).toHaveLength(2);
     expect(supported[0]?.name).toBe('PythonAgent');
+    expect(supported[1]?.name).toBe('NodeAgent');
   });
 
   it('includes Container agents with entrypoints', () => {

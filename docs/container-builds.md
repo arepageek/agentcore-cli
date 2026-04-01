@@ -3,10 +3,13 @@
 Container builds package your agent as a Docker container image instead of a code ZIP. Use containers when you need
 system-level dependencies, custom native libraries, or full control over the runtime environment.
 
+TypeScript agents always use Container build because AgentCore Runtime's CodeZip mode only supports Python runtimes. The
+CLI sets this automatically — no manual configuration needed.
+
 ## Prerequisites
 
-A container runtime is required for local development (`agentcore dev`) and packaging (`agentcore package`). Supported
-runtimes:
+A container runtime is required for packaging (`agentcore package`) and for Python container agents during local
+development. Supported runtimes:
 
 1. [Docker](https://docker.com)
 2. [Podman](https://podman.io)
@@ -16,12 +19,17 @@ The CLI auto-detects the first working runtime in the order listed above. If mul
 highest-priority one wins.
 
 > A local runtime is **not** required for `agentcore deploy` — AWS CodeBuild builds the image remotely.
+>
+> TypeScript agents do **not** need a local container runtime for `agentcore dev` — they run directly with `tsx watch`.
 
 ## Getting Started
 
 ```bash
-# New project with container build
+# Python project with container build (opt-in)
 agentcore create --name MyProject --build Container
+
+# TypeScript project (Container is the default and only option)
+agentcore create --name MyProject --language TypeScript --framework Strands --model-provider Bedrock
 
 # Add container agent to existing project
 agentcore add agent --name MyAgent --build Container --framework Strands --model-provider Bedrock
@@ -33,8 +41,19 @@ Both commands generate a `Dockerfile` and `.dockerignore` in the agent's code di
 app/MyAgent/
 ├── Dockerfile
 ├── .dockerignore
-├── pyproject.toml
+├── pyproject.toml      # Python
 └── main.py
+```
+
+TypeScript agents generate a Node.js-based Dockerfile:
+
+```
+app/MyAgent/
+├── Dockerfile          # Node 22 slim base
+├── .dockerignore
+├── package.json
+├── tsconfig.json
+└── main.ts
 ```
 
 ## Generated Dockerfile
@@ -75,13 +94,20 @@ All other fields work the same as CodeZip agents.
 agentcore dev
 ```
 
-For container agents, the dev server:
+For **Python** container agents, the dev server:
 
 1. Builds the container image and adds a dev layer with `uvicorn`
 2. Runs the container with your source directory volume-mounted at `/app`
 3. Enables hot reload via `uvicorn --reload` — code changes apply without rebuilding
 
-AWS credentials are forwarded automatically (environment variables and `~/.aws` mounted read-only).
+For **TypeScript** container agents, the dev server runs locally without Docker:
+
+1. Runs `npm install` if needed
+2. Starts `tsx watch` with hot-reload
+3. No container build or runtime required
+
+AWS credentials are forwarded automatically (environment variables and `~/.aws` mounted read-only for Python
+containers).
 
 ## Packaging and Deployment
 

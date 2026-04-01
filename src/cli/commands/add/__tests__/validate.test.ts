@@ -168,14 +168,15 @@ describe('validate', () => {
     });
 
     // AC5: Create path language restrictions
-    it('returns error for create path with TypeScript or Other', () => {
-      let result = validateAddAgentOptions({ ...validAgentOptionsCreate, language: 'TypeScript' });
+    it('returns error for create path with Other language', () => {
+      const result = validateAddAgentOptions({ ...validAgentOptionsCreate, language: 'Other' });
       expect(result.valid).toBe(false);
       expect(result.error?.includes('Python')).toBeTruthy();
+    });
 
-      result = validateAddAgentOptions({ ...validAgentOptionsCreate, language: 'Other' });
-      expect(result.valid).toBe(false);
-      expect(result.error?.includes('Python')).toBeTruthy();
+    it('accepts TypeScript for create path', () => {
+      const result = validateAddAgentOptions({ ...validAgentOptionsCreate, language: 'TypeScript' });
+      expect(result.valid).toBe(true);
     });
 
     // AC6: Create path requires memory

@@ -88,13 +88,12 @@ describe('validateCreateOptions', () => {
     expect(result.error).toContain('Invalid language');
   });
 
-  it('returns invalid for TypeScript language', () => {
+  it('returns valid for TypeScript language', () => {
     const result = validateCreateOptions(
       { name: 'TestProj4', language: 'TypeScript', framework: 'Strands', modelProvider: 'Bedrock', memory: 'none' },
       testDir
     );
-    expect(result.valid).toBe(false);
-    expect(result.error).toContain('TypeScript is not yet supported');
+    expect(result.valid).toBe(true);
   });
 
   it('returns invalid for invalid framework', () => {

@@ -14,6 +14,7 @@ AgentCore with minimal configuration.
 
 - **Node.js** 20.x or later
 - **uv** for Python agents ([install](https://docs.astral.sh/uv/getting-started/installation/))
+- **Docker**, **Podman**, or **Finch** for TypeScript agents (Container deployment only)
 
 ## Installation
 
@@ -120,10 +121,13 @@ my-project/
 ```
 ├── app/                    # Application code
 │   └── <AgentName>/        # Agent directory
-│       ├── main.py         # Agent entry point
+│       ├── main.py         # Python agent entry point
 │       ├── pyproject.toml  # Python dependencies
 │       └── model/          # Model configuration
 ```
+
+TypeScript agents use a similar structure with `main.ts`, `package.json`, `tsconfig.json`, and a `Dockerfile` for
+deployment.
 
 ## Configuration
 

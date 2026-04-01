@@ -25,10 +25,17 @@ function isPythonAgent(agent: AgentEnvSpec): boolean {
 }
 
 /**
+ * Checks if the agent is a Node/TypeScript agent by looking at the entrypoint.
+ */
+function isNodeAgent(agent: AgentEnvSpec): boolean {
+  return agent.entrypoint?.endsWith('.ts') || agent.entrypoint?.endsWith('.js');
+}
+
+/**
  * Checks if dev mode is supported for the given agent.
  *
  * Requirements:
- * - Agent must target Python (TypeScript support not yet implemented)
+ * - Agent must target Python or TypeScript
  * - CodeZip agents must have entrypoint
  */
 function isDevSupported(agent: AgentEnvSpec): DevSupportResult {
@@ -44,11 +51,11 @@ function isDevSupported(agent: AgentEnvSpec): DevSupportResult {
     return { supported: true };
   }
 
-  // Currently only Python is supported for CodeZip dev mode
-  if (!isPythonAgent(agent)) {
+  // Python and Node/TypeScript are supported for CodeZip dev mode
+  if (!isPythonAgent(agent) && !isNodeAgent(agent)) {
     return {
       supported: false,
-      reason: `Dev mode only supports Python agents. Agent "${agent.name}" does not appear to be a Python agent.`,
+      reason: `Dev mode supports Python and TypeScript agents. Agent "${agent.name}" has an unsupported entrypoint.`,
     };
   }
 

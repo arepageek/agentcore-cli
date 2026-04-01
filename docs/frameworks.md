@@ -121,6 +121,34 @@ that runs on AgentCore:
 | `--framework <fw>`      | `Strands` or `LangChain_LangGraph`        |
 | `--memory <opt>`        | `none`, `shortTerm`, `longAndShortTerm`   |
 
+## Supported Languages
+
+| Language       | Build Type | Dev Server        | Frameworks                                      |
+| -------------- | ---------- | ----------------- | ----------------------------------------------- |
+| **Python**     | CodeZip    | uvicorn (local)   | Strands, LangChain/LangGraph, GoogleADK, OpenAI |
+| **TypeScript** | Container  | tsx watch (local) | Strands                                         |
+
+### TypeScript Agents
+
+TypeScript agents use the [Strands Agents SDK](https://github.com/strands-agents/sdk-typescript) with Express and deploy
+as Container images. AgentCore Runtime's CodeZip mode only supports Python runtimes, so TypeScript agents automatically
+default to Container build.
+
+> **Local development runs without Docker.** The `agentcore dev` command runs TypeScript agents directly with
+> `tsx watch` for fast iteration and hot-reload — no container build needed. Docker/Podman/Finch is only required for
+> `agentcore deploy` and `agentcore package`.
+
+```bash
+# Create a TypeScript agent
+agentcore create --name MyProject --language TypeScript --framework Strands --model-provider Bedrock
+
+# Local dev — runs with tsx, no Docker needed
+agentcore dev
+
+# Deploy — builds container image via CodeBuild
+agentcore deploy
+```
+
 ## Bring Your Own (BYO) Agent
 
 For existing agent code or frameworks not listed above, use the BYO option:
@@ -138,16 +166,13 @@ agentcore add agent \
 
 1. **Entrypoint**: Your code must expose an HTTP endpoint that accepts agent invocation requests
 2. **Code location**: Directory containing your agent code
-3. **Language**: Python
+3. **Language**: Python or TypeScript
 
 ### BYO Options
 
-| Flag                     | Description                                |
-| ------------------------ | ------------------------------------------ |
-| `--type byo`             | Use BYO mode (required)                    |
-| `--code-location <path>` | Directory containing your agent code       |
-| `--entrypoint <file>`    | Entry file (e.g., `main.py` or `index.ts`) |
-| `--language <lang>`      | `Python`                                   |
+| Flag | Description |\n| ------------------------ | ------------------------------------------ | | `--type byo` | Use
+BYO mode (required) | | `--code-location <path>` | Directory containing your agent code | | `--entrypoint <file>` |
+Entry file (e.g., `main.py` or `main.ts`) | | `--language <lang>` | `Python` or `TypeScript` |
 
 ## Framework Comparison
 

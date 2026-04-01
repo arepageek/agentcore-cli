@@ -180,7 +180,9 @@ export function useDevServer(options: {
           // Detect when server is actually ready (only once)
           if (
             !serverReady &&
-            (message.includes('Application startup complete') || message.includes('Uvicorn running'))
+            (message.includes('Application startup complete') ||
+              message.includes('Uvicorn running') ||
+              message.includes('listening on port'))
           ) {
             serverReady = true;
             setStatus('running');

@@ -92,6 +92,15 @@ describe('mapGenerateConfigToAgent', () => {
     expect(result.protocol).toBe('HTTP');
   });
 
+  it('creates TypeScript agent spec with Node runtime and Container build', () => {
+    const { buildType: _, ...configWithoutBuild } = baseConfig;
+    const tsConfig: GenerateConfig = { ...configWithoutBuild, language: 'TypeScript' } as GenerateConfig;
+    const result = mapGenerateConfigToAgent(tsConfig);
+    expect(result.entrypoint).toBe('main.ts');
+    expect(result.runtimeVersion).toBe('NODE_22');
+    expect(result.build).toBe('Container');
+  });
+
   it('uses projectName for codeLocation path', () => {
     const result = mapGenerateConfigToAgent(baseConfig);
     expect(result.codeLocation).toBe('app/TestProject/');

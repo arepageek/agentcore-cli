@@ -212,7 +212,7 @@ export async function createProjectWithAgent(options: CreateWithAgentOptions): P
 
     const generateConfig = {
       projectName: agentName,
-      buildType: buildType ?? ('CodeZip' as BuildType),
+      buildType: buildType ?? (language === 'TypeScript' ? 'Container' : 'CodeZip'),
       sdk: resolvedFramework,
       modelProvider: resolvedModelProvider,
       apiKey,

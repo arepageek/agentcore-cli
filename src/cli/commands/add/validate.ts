@@ -228,11 +228,16 @@ export function validateAddAgentOptions(options: AddAgentOptions): ValidationRes
       return { valid: false, error: '--code-location is required for BYO path' };
     }
   } else {
-    if (options.language === 'TypeScript') {
-      return { valid: false, error: 'Create path only supports Python (TypeScript templates not yet available)' };
-    }
     if (options.language === 'Other') {
-      return { valid: false, error: 'Create path only supports Python' };
+      return { valid: false, error: 'Create path only supports Python and TypeScript' };
+    }
+
+    // TypeScript requires Container build (AgentCore Runtime CodeZip only supports Python)
+    if (options.language === 'TypeScript' && options.build === 'CodeZip') {
+      return {
+        valid: false,
+        error: 'TypeScript requires Container build type. AgentCore Runtime direct code deploy only supports Python.',
+      };
     }
 
     if (!options.memory) {

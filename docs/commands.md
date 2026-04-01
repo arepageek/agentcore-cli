@@ -65,30 +65,30 @@ agentcore create \
   --memory none
 ```
 
-| Flag                      | Description                                                                                                    |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `--name <name>`           | Project name (alphanumeric, starts with letter, max 23 chars)                                                  |
-| `--defaults`              | Use defaults (Python, Strands, Bedrock, no memory)                                                             |
-| `--no-agent`              | Skip agent creation                                                                                            |
-| `--type <type>`           | `create` (default) or `import`                                                                                 |
-| `--language <lang>`       | `Python` (default)                                                                                             |
-| `--framework <fw>`        | `Strands`, `LangChain_LangGraph`, `GoogleADK`, `OpenAIAgents`                                                  |
-| `--model-provider <p>`    | `Bedrock`, `Anthropic`, `OpenAI`, `Gemini`                                                                     |
-| `--build <type>`          | `CodeZip` (default) or `Container` (see [Container Builds](container-builds.md))                               |
-| `--api-key <key>`         | API key for non-Bedrock providers                                                                              |
-| `--memory <opt>`          | `none`, `shortTerm`, `longAndShortTerm` (see [Memory Shorthand Mapping](memory.md#--memory-shorthand-mapping)) |
-| `--protocol <protocol>`   | `HTTP` (default), `MCP`, `A2A`                                                                                 |
-| `--network-mode <mode>`   | `PUBLIC` (default) or `VPC`                                                                                    |
-| `--subnets <ids>`         | Comma-separated subnet IDs (required for VPC mode)                                                             |
-| `--security-groups <ids>` | Comma-separated security group IDs (required for VPC mode)                                                     |
-| `--agent-id <id>`         | Bedrock Agent ID (import only)                                                                                 |
-| `--agent-alias-id <id>`   | Bedrock Agent Alias ID (import only)                                                                           |
-| `--region <region>`       | AWS region for Bedrock Agent (import only)                                                                     |
-| `--output-dir <dir>`      | Output directory                                                                                               |
-| `--skip-git`              | Skip git initialization                                                                                        |
-| `--skip-python-setup`     | Skip venv setup                                                                                                |
-| `--dry-run`               | Preview without creating                                                                                       |
-| `--json`                  | JSON output                                                                                                    |
+| Flag                      | Description                                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `--name <name>`           | Project name (alphanumeric, starts with letter, max 23 chars)                                                       |
+| `--defaults`              | Use defaults (Python, Strands, Bedrock, no memory)                                                                  |
+| `--no-agent`              | Skip agent creation                                                                                                 |
+| `--type <type>`           | `create` (default) or `import`                                                                                      |
+| `--language <lang>`       | `Python` (default) or `TypeScript`                                                                                  |
+| `--framework <fw>`        | `Strands`, `LangChain_LangGraph`, `GoogleADK`, `OpenAIAgents`                                                       |
+| `--model-provider <p>`    | `Bedrock`, `Anthropic`, `OpenAI`, `Gemini`                                                                          |
+| `--build <type>`          | `CodeZip` (default for Python) or `Container` (default for TypeScript; see [Container Builds](container-builds.md)) |
+| `--api-key <key>`         | API key for non-Bedrock providers                                                                                   |
+| `--memory <opt>`          | `none`, `shortTerm`, `longAndShortTerm` (see [Memory Shorthand Mapping](memory.md#--memory-shorthand-mapping))      |
+| `--protocol <protocol>`   | `HTTP` (default), `MCP`, `A2A`                                                                                      |
+| `--network-mode <mode>`   | `PUBLIC` (default) or `VPC`                                                                                         |
+| `--subnets <ids>`         | Comma-separated subnet IDs (required for VPC mode)                                                                  |
+| `--security-groups <ids>` | Comma-separated security group IDs (required for VPC mode)                                                          |
+| `--agent-id <id>`         | Bedrock Agent ID (import only)                                                                                      |
+| `--agent-alias-id <id>`   | Bedrock Agent Alias ID (import only)                                                                                |
+| `--region <region>`       | AWS region for Bedrock Agent (import only)                                                                          |
+| `--output-dir <dir>`      | Output directory                                                                                                    |
+| `--skip-git`              | Skip git initialization                                                                                             |
+| `--skip-python-setup`     | Skip venv setup                                                                                                     |
+| `--dry-run`               | Preview without creating                                                                                            |
+| `--json`                  | JSON output                                                                                                         |
 
 ### deploy
 
@@ -197,8 +197,8 @@ agentcore add agent \
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `--name <name>`           | Agent name (alphanumeric + underscores, starts with letter, max 48 chars)                                                         |
 | `--type <type>`           | `create` (default), `byo`, or `import`                                                                                            |
-| `--build <type>`          | `CodeZip` (default) or `Container` (see [Container Builds](container-builds.md))                                                  |
-| `--language <lang>`       | `Python` (create); `Python`, `TypeScript`, `Other` (BYO)                                                                          |
+| `--build <type>`          | `CodeZip` (default for Python) or `Container` (default for TypeScript; see [Container Builds](container-builds.md))               |
+| `--language <lang>`       | `Python` (default) or `TypeScript` (create); `Python`, `TypeScript`, `Other` (BYO)                                                |
 | `--framework <fw>`        | `Strands`, `LangChain_LangGraph`, `GoogleADK`, `OpenAIAgents`                                                                     |
 | `--model-provider <p>`    | `Bedrock`, `Anthropic`, `OpenAI`, `Gemini`                                                                                        |
 | `--api-key <key>`         | API key for non-Bedrock providers                                                                                                 |

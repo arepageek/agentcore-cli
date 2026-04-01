@@ -67,14 +67,36 @@ function ensurePythonVenv(
   return true;
 }
 
+/**
+ * Ensures Node.js dependencies are installed.
+ * Checks for node_modules existence and runs npm install if needed.
+ */
+function ensureNodeDeps(cwd: string, onLog: (level: LogLevel, message: string) => void): boolean {
+  const nodeModulesPath = join(cwd, 'node_modules');
+  if (existsSync(nodeModulesPath)) {
+    return true;
+  }
+
+  onLog('system', 'Installing Node.js dependencies...');
+  const result = spawnSync('npm', ['install'], { cwd, stdio: 'pipe' });
+  if (result.status !== 0) {
+    onLog('error', `Failed to install dependencies: ${result.stderr?.toString() || 'unknown error'}`);
+    return false;
+  }
+
+  onLog('system', 'Node.js environment ready');
+  return true;
+}
+
 /** Dev server for CodeZip agents. Runs uvicorn (Python) or npx tsx (Node.js) locally. */
 export class CodeZipDevServer extends DevServer {
   protected prepare(): Promise<boolean> {
-    return Promise.resolve(
-      this.config.isPython
-        ? ensurePythonVenv(this.config.directory, this.options.callbacks.onLog, this.config.protocol)
-        : true
-    );
+    if (this.config.isPython) {
+      return Promise.resolve(
+        ensurePythonVenv(this.config.directory, this.options.callbacks.onLog, this.config.protocol)
+      );
+    }
+    return Promise.resolve(ensureNodeDeps(this.config.directory, this.options.callbacks.onLog));
   }
 
   protected getSpawnConfig(): SpawnConfig {
@@ -83,10 +105,11 @@ export class CodeZipDevServer extends DevServer {
     const env = { ...process.env, ...envVars, PORT: String(port), LOCAL_DEV: '1' };
 
     if (!isPython) {
-      // Node.js path (unchanged)
+      // Node.js/TypeScript: run the entrypoint file directly with tsx
+      const entryFile = module.includes(':') ? (module.split(':')[0] ?? module) : module;
       return {
         cmd: 'npx',
-        args: ['tsx', 'watch', (module.split(':')[0] ?? module).replace(/\./g, '/') + '.ts'],
+        args: ['tsx', 'watch', entryFile],
         cwd: directory,
         env,
       };

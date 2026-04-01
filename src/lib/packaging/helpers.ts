@@ -111,15 +111,15 @@ async function findUp(fileName: string, startDir: string): Promise<string | null
 
 export async function resolveProjectPaths(options: PackageOptions = {}, agentName?: string): Promise<ResolvedPaths> {
   const startDir = options.projectRoot ? resolve(options.projectRoot) : process.cwd();
-  const candidatePyproject = options.pyprojectPath
+  const candidateProjectFile = options.pyprojectPath
     ? resolve(options.pyprojectPath)
     : await findUp('pyproject.toml', startDir);
 
-  if (!candidatePyproject || !(await pathExists(candidatePyproject))) {
+  if (!candidateProjectFile || !(await pathExists(candidateProjectFile))) {
     throw new MissingProjectFileError(options.pyprojectPath ?? join(startDir, 'pyproject.toml'));
   }
 
-  const pyprojectPath = candidatePyproject;
+  const pyprojectPath = candidateProjectFile;
 
   const projectRoot = options.projectRoot ? resolve(options.projectRoot) : dirname(pyprojectPath);
   const srcDir = resolve(projectRoot, options.srcDir ?? '.');
@@ -251,15 +251,15 @@ function findUpSync(fileName: string, startDir: string): string | null {
 
 export function resolveProjectPathsSync(options: PackageOptions = {}, agentName?: string): ResolvedPaths {
   const startDir = options.projectRoot ? resolve(options.projectRoot) : process.cwd();
-  const candidatePyproject = options.pyprojectPath
+  const candidateProjectFile = options.pyprojectPath
     ? resolve(options.pyprojectPath)
     : findUpSync('pyproject.toml', startDir);
 
-  if (!candidatePyproject || !pathExistsSync(candidatePyproject)) {
+  if (!candidateProjectFile || !pathExistsSync(candidateProjectFile)) {
     throw new MissingProjectFileError(options.pyprojectPath ?? join(startDir, 'pyproject.toml'));
   }
 
-  const pyprojectPath = candidatePyproject;
+  const pyprojectPath = candidateProjectFile;
   const projectRoot = options.projectRoot ? resolve(options.projectRoot) : dirname(pyprojectPath);
   const srcDir = resolve(projectRoot, options.srcDir ?? '.');
   const artifactDir = resolve(options.artifactDir ?? join(projectRoot, CONFIG_DIR));

@@ -16,6 +16,10 @@ export { ContainerDevServer } from './container-dev-server';
  * Factory function to create the appropriate dev server based on build type.
  */
 export function createDevServer(config: DevConfig, options: DevServerOptions): DevServer {
+  // TypeScript Container agents run locally in dev (Container is only for deploy)
+  if (config.buildType === 'Container' && !config.isPython) {
+    return new CodeZipDevServer(config, options);
+  }
   return config.buildType === 'Container'
     ? new ContainerDevServer(config, options)
     : new CodeZipDevServer(config, options);

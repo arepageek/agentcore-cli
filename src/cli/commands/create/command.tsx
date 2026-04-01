@@ -124,7 +124,7 @@ async function handleCreateCLI(options: CreateOptions): Promise<void> {
         name: options.name!,
         cwd,
         type: options.type as 'create' | 'import' | undefined,
-        buildType: (options.build as BuildType) ?? 'CodeZip',
+        buildType: options.build as BuildType | undefined,
         language: (options.language as TargetLanguage) ?? (options.type === 'import' ? 'Python' : undefined),
         framework: options.framework as SDKFramework | undefined,
         modelProvider: options.modelProvider as ModelProvider | undefined,
